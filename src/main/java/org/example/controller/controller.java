@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Locale;
 
 @RestController
-@CrossOrigin (origins = {"http://192.168.1.5:4200","http://127.0.0.1:4200","*"})
+@CrossOrigin (origins = {"http://192.168.1.5:4200","http://127.0.0.1:4200","*","http://localhost:4200"})
 public class controller {
     private Logger logger = LoggerFactory.getLogger(controller.class);
 

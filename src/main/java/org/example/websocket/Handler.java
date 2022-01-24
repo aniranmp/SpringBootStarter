@@ -6,25 +6,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.Model.Users;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 @Component
 public class Handler extends TextWebSocketHandler {
 
     private Logger logger = LoggerFactory.getLogger(Users.class);
-    private HashMap<String, WebSocketSession> activeConnections = new HashMap<>();
+    public static HashMap<String, WebSocketSession> activeConnections = new HashMap<>();
+    public static List<String> customers = new ArrayList<>();
     private ObjectMapper objectMapper;
-
     public Handler(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
+
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -32,6 +35,7 @@ public class Handler extends TextWebSocketHandler {
         logger.info(session.getUri().getPath());
         activeConnections.put(session.getUri().getPath(), session);
         logger.info(activeConnections.size() + "");
+        customers.add(session.getUri().getPath());
         super.afterConnectionEstablished(session);
     }
 
@@ -62,6 +66,9 @@ public class Handler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         logger.info("close Connection");
         activeConnections.remove(session.getUri().getPath());
+        customers.remove(session.getUri().getPath());
         super.afterConnectionClosed(session, status);
     }
+
+
 }
